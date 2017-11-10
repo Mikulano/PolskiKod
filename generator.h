@@ -15,12 +15,11 @@ enum rod{
     R_MN
 };
 
-typedef QVector<QString> Atrybut;
+typedef QVector<int> Atrybut;
 typedef QMap<QString,Atrybut> Slownik;
 
-
 class generator{
-    rod _rod;
+    int _rod;
     QString _zdanie;
     Slownik _slRzeczownik;
     Slownik _slCzasownik;
@@ -54,4 +53,5 @@ public:
     void uzupZdZwiazek();
 };
 
+QString zmienicRod(QString, rod);
 

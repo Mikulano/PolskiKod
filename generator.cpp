@@ -23,7 +23,35 @@ void generator::usunacSpacje(){
        _zdanie.remove(_zdanie.size() - 1, 1);
 }
 
+QString zmienicRod(QString slowo, int rod){
+    bool flag = true;
+    int counter = -1;
+    QString zakon="";
+    QString::iterator it = slowo.begin();
+    QString::iterator itZakon = slowo.begin();
+    while (counter!=rod){
+        if (*it == '/'){
+            counter++;
+            if(flag){
+                flag = false;
+                itZakon = it;
+            }
+        }
+        it++;
+    }
+
+    while(*it != '/' && it != slowo.end()){
+        zakon += *it;
+        it++;
+    }
+
+    slowo.truncate(itZakon-slowo.begin());
+    slowo+=zakon;
+    return slowo;
+}
+
 void generator ::SpZdanie(){
+    _rod = rand()%3;
     switch (rand()%4) {
     case 0:
         SpPodmiotCzesc();
@@ -82,11 +110,17 @@ void generator::SpOkolicznosc(){
     SpPrzyslowek();
 }
 void generator::SpPrzymiotnik(){
-    _zdanie += (_slPrzymiotnik.begin()+rand()%_slPrzymiotnik.size()).key();
+    auto zapis = _slPrzymiotnik.begin()+rand()%_slPrzymiotnik.size();
+   _zdanie += zmienicRod(zapis.key(),_rod)+=" ";
+  //  _zdanie += (_slPrzymiotnik.begin()+rand()%_slPrzymiotnik.size()).key();
 }
 
 void generator::SpRzeczownik(){
-    _zdanie += (_slRzeczownik.begin()+rand()%_slRzeczownik.size()).key();
+    auto zapis = _slRzeczownik.begin()+rand()%_slRzeczownik.size();
+    while(zapis.value()[0]!=_rod){
+        zapis = _slRzeczownik.begin()+rand()%_slRzeczownik.size();
+    }
+    _zdanie += (zapis.key());
 }
 
 void generator::SpPrzyslowek(){
@@ -108,9 +142,13 @@ void generator:: uzupCzas(){
    _slCzasownik.insert("leży ", Atrybut ());
 }
 void generator:: uzupRzecz(){
-    _slRzeczownik.insert("pileczka ", Atrybut("dd"));
-    _slRzeczownik.insert("kameń ", Atrybut ());
-    _slRzeczownik.insert("muszla ", Atrybut ());
+    _slRzeczownik.insert("pileczka ", Atrybut() = {R_ZENSKI});
+    _slRzeczownik.insert("kameń ", Atrybut ()={R_MESKI});
+    _slRzeczownik.insert("muszla ", Atrybut ()={R_ZENSKI});
+    _slRzeczownik.insert("kwiat ", Atrybut ()={R_MESKI});
+    _slRzeczownik.insert("kociątko ", Atrybut ()={R_NIJAKI});
+    _slRzeczownik.insert("mydło ", Atrybut ()={R_NIJAKI});
+
 }
 void generator:: uzupPrzysl(){
     _slPrzyslowek.insert("wysoko ",Atrybut ());
@@ -118,9 +156,9 @@ void generator:: uzupPrzysl(){
     _slPrzyslowek.insert("dobrze ", Atrybut ());
 }
 void generator:: uzupPrzym(){
-   _slPrzymiotnik.insert("mała ",Atrybut ());
-   _slPrzymiotnik.insert("duża ", Atrybut ());
-   _slPrzymiotnik.insert("wielka ", Atrybut ());
+   _slPrzymiotnik.insert("mał/y/a/e",Atrybut ());
+   _slPrzymiotnik.insert("duż/y/a/e", Atrybut ());
+   _slPrzymiotnik.insert("wielk/i/a/ie", Atrybut ());
 }
 
 void generator::uzupZdZwiazek(){
